@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prompt Engine Pro — AI Chat Cleanup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <div class="logo-text">
+          <span class="logo-name">Prompt Engine Pro</span>
+          <span class="logo-sub">AI Chat Cleanup for UMKM</span>
+        </div>
+      </div>
+      <div class="header-badge">Multi-Model AI</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Ubah Chat Berantakan<br><span class="highlight">Jadi Pesan Profesional</span></h1>
+      <p class="hero-sub">Paste chat WhatsApp atau Instagram kamu — AI akan membersihkan, merangkum, mendeteksi emosi, dan membuat balasan siap pakai.</p>
+    </section>
+
+    <section class="input-card">
+      <div class="input-label">
+        <span class="label-dot"></span>
+        Paste Chat di Sini
+      </div>
+      <textarea id="chatInput" placeholder="Contoh:&#10;Customer: halooo kak mau tanya dong produknya masih ada gak ya&#10;Admin: ada kak&#10;Customer: berapa harganya&#10;Admin: 150rb&#10;Customer: mahal bgt, bisa kurang gak&#10;Admin: maaf kak harganya segitu&#10;Customer: yaudah ga jadi deh"></textarea>
+      <div class="input-footer">
+        <span class="char-count" id="charCount">0 karakter</span>
+        <button id="generateBtn" onclick="generate()">
+          <span id="btnText">⚡ Generate Response</span>
+          <span id="btnLoader" class="hidden">
+            <span class="spinner"></span> Memproses...
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <div id="errorBox" class="error-box hidden">
+      <span class="error-icon">⚠️</span>
+      <span id="errorMsg"></span>
+    </div>
+
+    <div id="loadingState" class="loading-state hidden">
+      <div class="loading-bars">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
+      <p>AI sedang menganalisis chat kamu...</p>
+      <span class="loading-sub">Menggunakan multi-model parallel inference</span>
+    </div>
+
+    <section id="outputSection" class="output-section hidden">
+
+      <div class="results-header">
+        <div class="results-title">✅ Hasil Analisis AI</div>
+        <div class="results-meta" id="resultsMeta"></div>
+      </div>
+
+      <div class="grid-top">
+        <div class="card card--clean">
+          <div class="card-header">
+            <div class="card-title"><span class="card-icon">✨</span> Chat Diperbaiki</div>
+            <button class="copy-btn" data-target="cleanedText">
+              <span class="copy-icon">⎘</span> Copy
+            </button>
+          </div>
+          <div id="cleanedText" class="card-body monospace"></div>
+        </div>
+
+        <div class="card card--summary">
+          <div class="card-header">
+            <div class="card-title"><span class="card-icon">📋</span> Ringkasan</div>
+            <button class="copy-btn" data-target="summaryText">
+              <span class="copy-icon">⎘</span> Copy
+            </button>
+          </div>
+          <div id="summaryText" class="card-body"></div>
+        </div>
+      </div>
+
+      <div class="card card--emotion">
+        <div class="card-header">
+          <div class="card-title"><span class="card-icon">🎭</span> Deteksi Emosi Customer</div>
+          <button class="copy-btn" data-target="emotionText">
+            <span class="copy-icon">⎘</span> Copy
+          </button>
+        </div>
+        <div id="emotionText" class="card-body emotion-body"></div>
+      </div>
+
+      <div class="section-label">
+        <span>💬 3 Versi Balasan Otomatis</span>
+      </div>
+
+      <div class="replies-grid">
+        <div class="card card--formal">
+          <div class="card-header">
+            <div class="card-title"><span class="card-icon">👔</span> Formal</div>
+            <button class="copy-btn" data-target="replyFormal"><span class="copy-icon">⎘</span> Copy</button>
+          </div>
+          <div id="replyFormal" class="card-body"></div>
+        </div>
+        <div class="card card--semi">
+          <div class="card-header">
+            <div class="card-title"><span class="card-icon">🤝</span> Semi-Formal</div>
+            <button class="copy-btn" data-target="replySemi"><span class="copy-icon">⎘</span> Copy</button>
+          </div>
+          <div id="replySemi" class="card-body"></div>
+        </div>
+        <div class="card card--casual">
+          <div class="card-header">
+            <div class="card-title"><span class="card-icon">😊</span> Santai</div>
+            <button class="copy-btn" data-target="replyCasual"><span class="copy-icon">⎘</span> Copy</button>
+          </div>
+          <div id="replyCasual" class="card-body"></div>
+        </div>
+      </div>
+
+      <div class="section-label">
+        <span>🔒 Alternatif Closing</span>
+      </div>
+
+      <div id="closingsContainer" class="closings-grid"></div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>Prompt Engine Pro &copy; 2025 · Multi-Model AI via OpenRouter · Dibuat untuk UMKM Indonesia</p>
+  </footer>
+
+  <div id="toastBox" class="toast hidden">✅ Disalin!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
