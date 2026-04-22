@@ -1,9 +1,7 @@
 // === PROMPT ENGINE PRO — app.js ===
 
-// PENTING: Ganti URL ini ke URL Vercel kamu sebelum deploy ke GitHub Pages
-// Contoh: 'https://prompt-engine-pro.vercel.app/api/generate'
-// Untuk testing lokal dengan Vercel CLI: '/api/generate'
-const API_URL = 'GANTI_DENGAN_URL_VERCEL_KAMU/api/generate';
+// AUTO: gunakan endpoint yang sama (Vercel / lokal)
+const API_URL = '/api/generate';
 
 // === CHAR COUNT ===
 var chatInput = document.getElementById('chatInput');
@@ -28,12 +26,6 @@ async function generate() {
     return;
   }
 
-  // Validasi API_URL sudah diganti
-  if (API_URL.indexOf('GANTI_DENGAN') !== -1) {
-    showError('Konfigurasi belum selesai: ganti API_URL di app.js dengan URL Vercel kamu.');
-    return;
-  }
-
   var btn = document.getElementById('generateBtn');
   var btnText = document.getElementById('btnText');
   var btnLoader = document.getElementById('btnLoader');
@@ -48,7 +40,6 @@ async function generate() {
 
   var startTime = Date.now();
 
-  // FIX: AbortController untuk frontend fetch timeout (25 detik)
   var controller = new AbortController();
   var fetchTimer = setTimeout(function() {
     controller.abort();
@@ -123,12 +114,10 @@ function renderOutput(data, elapsed) {
   var outputSection = document.getElementById('outputSection');
   outputSection.classList.remove('hidden');
 
-  // Reset animasi fadeUp agar berjalan ulang setiap generate
-  // void offsetHeight harus dipanggil SETELAH element visible
   var cards = outputSection.querySelectorAll('.card, .closing-item');
   cards.forEach(function(card) {
     card.style.animation = 'none';
-    void card.offsetHeight; // force reflow
+    void card.offsetHeight;
     card.style.animation = '';
   });
 
@@ -223,7 +212,7 @@ function fallbackCopy(text) {
   document.body.appendChild(ta);
   ta.focus();
   ta.select();
-  try { document.execCommand('copy'); } catch(e) { console.warn('Fallback copy gagal:', e); }
+  try { document.execCommand('copy'); } catch(e) {}
   document.body.removeChild(ta);
 }
 
@@ -232,7 +221,7 @@ function showToast() {
   var toast = document.getElementById('toastBox');
   toast.classList.add('hidden');
   clearTimeout(window._toastTimer);
-  void toast.offsetHeight; // force reflow agar animasi restart
+  void toast.offsetHeight;
   toast.classList.remove('hidden');
   window._toastTimer = setTimeout(function() {
     toast.classList.add('hidden');
